@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+</head>
+<body>
+
+<div align="center">
+    <h2>User list</h2>
+    <table border="1">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Password</th>
+            <th>Roles</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Add roles</th>
+        </tr>
+        <tr th:each="User : ${userList}">
+            <td th:utext="${User.firstName}">...</td>
+            <td th:utext="${User.lastName}">...</td>
+            <td th:utext="${User.date}">...</td>
+            <td th:utext="${User.name}">...</td>
+            <td th:utext="${User.password}">...</td>
+            <td>
+                <table>
+                    <tr th:each="Role : ${User.roles}" >
+                        <td th:utext="${Role.role}"></td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <a href="edit.html" th:href="@{/admin/edit/{userName}(userName=${User.name})}">edit</a>
+            </td>
+            <td>
+                <a href="/admin/delete/" th:href="@{/admin/delete/{name}(name=${User.name})}">delete</a>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <a href="/admin/editRoleAd/" th:href="@{/admin/editRoleAd/{userName}(userName=${User.name})}">add_admin</a>
+                        </td>
+                        <td>
+                            <a href="/admin/editRoleAn/" th:href="@{/admin/editRoleAn/{userName}(userName=${User.name})}">add_annon</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/admin/deleteRoleAd/" th:href="@{/admin/deleteRoleAd/{userName}(userName=${User.name})}">delete_admin</a>
+                        </td>
+                        <td>
+                            <a href="/admin/deleteRoleAn/" th:href="@{/admin/deleteRoleAn/{userName}(userName=${User.name})}">delete_annon</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <div >
+        <a href="/user">User Page</a>
+    </div>
+    <h3>ADD</h3>
+    <a href="add.html" th:href="@{/admin/add}">ADD</a>
+</div>
+<div align="center">
+    <b><a href="/logout">Logout</a></b>
+</div>
+</body>
+</html>
