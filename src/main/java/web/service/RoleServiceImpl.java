@@ -3,16 +3,16 @@ package web.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.dao.daoRole;
+import web.dao.RoleDao;
 import web.model.Role;
 
 import java.util.List;
 
 @Service
 @Transactional
-public class RoleService {
+public class RoleServiceImpl implements RoleService {
     @Autowired
-    daoRole roleDao;
+    private RoleDao roleDao;
 
     public List<Role> allRoles() {
         return roleDao.findAll();

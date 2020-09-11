@@ -1,58 +1,23 @@
 package web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import web.dao.dao;
+import org.springframework.stereotype.Component;
 import web.model.User;
 
-import java.util.Collections;
 import java.util.List;
-@Service
-@Transactional
-public class UserService implements service {
-    @Autowired
-    dao userDao;
-    @Autowired
-    RoleService roleService;
-    @Override
-    public List<User> allUsers() {
-        return userDao.findAll();
-    }
 
-    @Override
-    public void add(User user) {
-        user.setRoles(Collections.singleton(roleService.getById(2L)));
-        userDao.save(user);
-    }
+@Component
+public interface UserService {
+    List<User> allUsers();
 
-    @Override
-    public void delete(User user) {
-        userDao.delete(user);
-    }
+    void add(User user);
 
-    @Override
-    public void edit(User user) {
+    void delete(User user);
 
-        userDao.save(user);
-    }
+    void edit(User user,String id);
 
-    @Override
-    public User getByName(String name) {
-        return userDao.findById(name).get();
-    }
+    User getByName(String name);
 
-    @Override
-    public void addRole(String name, Long id) {
-        User user = getByName(name);
-        user.getRoles().add(roleService.getById(id));
-        edit(user);
-    }
+    void addRole(String name, Long id);
 
-    @Override
-    public void deleteRole(String name, Long id) {
-        User user = getByName(name);
-        user.getRoles().remove(roleService.getById(id));
-        edit(user);
-    }
+    void deleteRole(String name, Long id);
 }

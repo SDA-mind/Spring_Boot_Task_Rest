@@ -1,87 +1,75 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.service.RoleService;
-import web.service.service;
+import web.service.RoleServiceImpl;
+import web.service.UserService;
+import web.service.UserServiceImpl;
 
-import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 public class AdminController {
     @Autowired
-    service userService;
+    private UserService userServiceImpl;
     @Autowired
-    RoleService roleService;
+    private RoleService roleServiceImpl;
 
     @GetMapping(value = "/admin/userlist")
-    public String getList(Model model) {
-        List<User> userList = userService.allUsers();
-        model.addAttribute("userList", userList);
-        return "/admin/userlist";
+    public List<User> getList() {
+        List<User> userList = userServiceImpl.allUsers();
+        return userList;
     }
 
-    @GetMapping(value = "/admin/edit/{name}")
-    public String editPage(@PathVariable("name") String name, Model model) {
-        User editUser = userService.getByName(name);
-        model.addAttribute("editUser", editUser);
-        return "/admin/edit";
+    @GetMapping(value = "/user/{name}")
+    public User getUser(@PathVariable("name") String name) {
+        User user = userServiceImpl.getByName(name);
+        return user;
     }
 
-    @PostMapping(value = "/admin/edit")
-    public String edit(@ModelAttribute("editUser") User user) {
-        userService.edit(user);
-        return "redirect:/admin/userlist";
+    @PostMapping(value = "/admin/userlist")
+    public User add(@RequestBody User user) {
+        userServiceImpl.add(user);
+        return user;
     }
 
-    @GetMapping(value = "/admin/add")
-    public String addPage() {
-        return "/admin/add";
+    @PutMapping(value = "/admin/userlist/{name}")
+    public User edit(@PathVariable("name") String name, @RequestBody User user) {
+        userServiceImpl.edit(user, name);
+        return user;
     }
 
-    @PostMapping(value = "/admin/add")
-    public String add(User user) {
-        userService.add(user);
-        return "redirect:/admin/userlist";
+    @DeleteMapping(value = "/admin/userlist/{name}")
+    public User delete(@PathVariable("name") String name) {
+        User user = userServiceImpl.getByName(name);
+        userServiceImpl.delete(user);
+        return user;
     }
 
-    @GetMapping(value = "/admin/delete/{name}")
-    public String delete(@PathVariable("name") String name) {
-        User user = userService.getByName(name);
-        userService.delete(user);
-        return "redirect:/admin/userlist";
-    }
-
-    @GetMapping(value = "/admin/editRoleAd/{name}")
-    public String setRoleAdmin(@PathVariable("name") String name) {
-        userService.addRole(name, 1L);
-        return "redirect:/admin/userlist";
-    }
-
-    @GetMapping(value = "/admin/editRoleAn/{name}")
-    public String setRoleAnnon(@PathVariable("name") String name) {
-        userService.addRole(name, 3L);
-        return "redirect:/admin/userlist";
-    }
-
-    @GetMapping(value = "/admin/deleteRoleAd/{name}")
-    public String deleteRoleAdmin(@PathVariable("name") String name) {
-        userService.deleteRole(name, 1L);
-        return "redirect:/admin/userlist";
-    }
-
-    @GetMapping(value = "/admin/deleteRoleAn/{name}")
-    public String deleteRoleAnnon(@PathVariable("name") String name) {
-        userService.deleteRole(name, 3L);
-        return "redirect:/admin/userlist";
-    }
+//    @GetMapping(value = "/admin/editRoleAd/{name}")
+//    public String setRoleAdmin(@PathVariable("name") String name) {
+//        userService.addRole(name, 1L);
+//        return "redirect:/admin/userlist";
+//    }
+//
+//    @GetMapping(value = "/admin/editRoleAn/{name}")
+//    public String setRoleAnnon(@PathVariable("name") String name) {
+//        userService.addRole(name, 3L);
+//        return "redirect:/admin/userlist";
+//    }
+//
+//    @GetMapping(value = "/admin/deleteRoleAd/{name}")
+//    public String deleteRoleAdmin(@PathVariable("name") String name) {
+//        userService.deleteRole(name, 1L);
+//        return "redirect:/admin/userlist";
+//    }
+//
+//    @GetMapping(value = "/admin/deleteRoleAn/{name}")
+//    public String deleteRoleAnnon(@PathVariable("name") String name) {
+//        userService.deleteRole(name, 3L);
+//        return "redirect:/admin/userlist";
+//    }
 
 }
