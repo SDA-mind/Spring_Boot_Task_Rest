@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<tr th:each="User : ${userList}">
+    <td th:utext="${User.firstName}">...</td>
+    <td th:utext="${User.lastName}">...</td>
+    <td th:utext="${User.date}">...</td>
+    <!--                                    <td th:utext="${User.name}">...</td>-->
+    <!--                                    <td th:utext="${User.password}">...</td>-->
+    <td>
+        <dl th:each="Role : ${User.roles}">
+            <dt th:utext="${Role.role}">...</dt>
+        </dl>
+    </td>
+    <td>
+        <a class="btn btn-info" role="button" data-toggle="modal" href="#modal"
+           th:href="@{/admin/edit/{userName}(userName=${User.name})}">edit</a>
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Edit User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex align-items-center flex-column justify-content-center h-100">
+                            <form action="/admin/edit/" method="GET">
+                                <div class="form-group">
+                                    <label for="formFirstName"
+                                           class="d-flex align-items-center justify-content-center">
+                                        <b>First Name</b>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           name="firstName"
+                                           id="EditformFirstName"
+                                           placeholder="Enter First name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName"
+                                           class="d-flex align-items-center justify-content-center">
+                                        <b>Last name</b>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           name="lastName"
+                                           id="EditlastName"
+                                           placeholder="Enter Last name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="date"
+                                           class="d-flex align-items-center justify-content-center">
+                                        <b>Date</b>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           name="date"
+                                           id="Editdate"
+                                           placeholder="Enter date">
+                                </div>
+                                <fieldset disabled>
+                                    <div class="form-group">
+                                        <label for="name"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>Name</b>
+                                        </label>
+                                        <input type="text" class="form-control disabled"
+                                               name="name"
+                                               id="Editname"
+                                               placeholder="Enter name"
+                                               value="admin">
+                                    </div>
+                                </fieldset>
+                                <div class="form-group">
+                                    <label for="password"
+                                           class="d-flex align-items-center justify-content-center">
+                                        <b>Password</b>
+                                    </label>
+                                    <input type="text" class="form-control"
+                                           name="password"
+                                           id="Editpassword"
+                                           placeholder="Enter password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="roleSelect"
+                                           class="d-flex align-items-center justify-content-center">
+                                        <b>Role</b>
+                                    </label>
+                                    <select multiple class="form-control"
+                                            id="EditroleSelect">
+                                        <option>ADMIN</option>
+                                        <option>USER</option>
+                                        <option>ANNON</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a class="btn bg-primary text-white" role="button" href="/admin/edit">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <a class="btn btn-danger" role="button" data-toggle="modal" href="#modalDelete">delete</a>
+        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalDelLabel">Delete User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex align-items-center flex-column justify-content-center h-100">
+                            <form action="/admin/user/" method="GET">
+                                <fieldset disabled>
+                                    <div class="form-group">
+                                        <label for="formFirstName"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>First Name</b>
+                                        </label>
+                                        <input type="text" class="form-control"
+                                               name="firstName"
+                                               id="DelformFirstName"
+                                               placeholder="Enter First name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>Last name</b>
+                                        </label>
+                                        <input type="text" class="form-control"
+                                               name="lastName"
+                                               id="DellastName"
+                                               placeholder="Enter Last name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="date"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>Date</b>
+                                        </label>
+                                        <input type="text" class="form-control"
+                                               name="date"
+                                               id="Deldate"
+                                               placeholder="Enter date">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="name"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>Name</b>
+                                        </label>
+                                        <input type="text"
+                                               class="form-control disabled"
+                                               name="name"
+                                               id="Delname"
+                                               placeholder="Enter name"
+                                               value="admin">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="password"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>Password</b>
+                                        </label>
+                                        <input type="text" class="form-control"
+                                               name="password"
+                                               id="Delpassword"
+                                               placeholder="Enter password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roleSelect"
+                                               class="d-flex align-items-center justify-content-center">
+                                            <b>Role</b>
+                                        </label>
+                                        <select multiple class="form-control"
+                                                id="DelroleSelect">
+                                            <option>ADMIN</option>
+                                            <option>USER</option>
+                                            <option>ANNON</option>
+                                        </select>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a class="btn btn-primary" role="button" href="/admin/delete/">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <dl>
+            <dt>
+                <div class="btn-group" role="group"
+                     aria-label="Basic example">
+                    <a class="btn btn-info" role="button"
+                       href="/admin/editRoleAd/"
+                       th:href="@{/admin/editRoleAd/{userName}(userName=${User.name})}">add_admin</a>
+                    <a class="btn btn-info" role="button"
+                       href="/admin/editRoleAn/"
+                       th:href="@{/admin/editRoleAn/{userName}(userName=${User.name})}">add_annon</a>
+                </div>
+            </dt>
+            <dt>
+                <div class="btn-group" role="group"
+                     aria-label="Basic example">
+                    <a class="btn btn-danger" role="button"
+                       href="/admin/deleteRoleAd/"
+                       th:href="@{/admin/deleteRoleAd/{userName}(userName=${User.name})}">delete_admin</a>
+                    <a class="btn btn-danger" role="button"
+                       href="/admin/deleteRoleAn/"
+                       th:href="@{/admin/deleteRoleAn/{userName}(userName=${User.name})}">delete_annon</a>
+                </div>
+            </dt>
+        </dl>
+    </td>
+</tr>
+
+
+
+
+
+<tr>
+    <td th:utext="${User.firstName}">...</td>
+    <td th:utext="${User.lastName}">...</td>
+    <td th:utext="${User.date}">...</td>
+    <td th:utext="${User.name}">...</td>
+    <td th:utext="${User.password}">...</td>
+    <td>
+        <table class="table table-borderless table-light">
+            <tr th:each="Role : ${User.roles}">
+                <td th:utext="${Role.role}">...</td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</body>
+</html>
