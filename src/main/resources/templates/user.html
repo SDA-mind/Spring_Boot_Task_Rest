@@ -18,7 +18,7 @@
         <div class="text-block" style="margin-left: 20px">
             <span class="navbar-text text-white"><b id="usernamelabel" sec:authentication="name"></b></span>
             <span class="navbar-text text-white">with roles:</span>
-            <span class="navbar-text text-white">USER</span>
+            <span class="navbar-text text-white" id="userRoles"></span>
         </div>
         <a href="/logout" class="btn btn-dark text-muted" role="button">Logout</a>
     </header>
@@ -72,8 +72,9 @@
             success: function (data) {
                     let auth = "";
                     for(let pop = 0; pop < data["authorities"].length; pop++) {
-                        auth += data["authorities"][pop].authority;
+                        auth += data["authorities"][pop].authority + ",";
                     }
+                document.getElementById("userRoles").innerHTML += `${auth}`;
                     document.getElementById("userRows").innerHTML +=
                         `<tr>
 <td >${data.firstName}</td>

@@ -18,7 +18,7 @@
         <div class="text-block" style="margin-left: 20px">
             <span class="navbar-text text-white" ><b id="usernamelabel" sec:authentication="name"  ></b></span>
             <span class="navbar-text text-white">with roles:</span>
-            <span class="navbar-text text-white">...</span>
+            <span class="navbar-text text-white" id="adminRoles"></span>
 <!--                  sec:authentication="principal.authorities"-->
         </div>
         <a href="/logout" class="btn btn-dark text-muted" role="button">Logout</a>
@@ -191,8 +191,9 @@
                     for (let step = 0; step < data.length; step++) {
                         let auth = "";
                         for (let pop = 0; pop < data[step]["authorities"].length; pop++) {
-                            auth += data[step]["authorities"][pop].authority;
+                            auth += data[step]["authorities"][pop].authority + ",";
                         }
+
                         document.getElementById("rows").innerHTML +=
                             `<tr>
 <td id="${step}fn" >${data[step].firstName}</td>
@@ -202,7 +203,7 @@
 <td id="${step}da">${data[step].date}</td>
 <td id="${step}ro">${auth}</td>
 <td>
-    <a class="btn btn-info" role="button" data-toggle="modal" href="#modal" id="editStartbtn">edit</a>
+    <button type="button" class="btn btn-info" role="button" data-toggle="modal" data-target="#modal" onclick="EditStart()">edit</button>
     <div class="modal fade" id="modal" tabIndex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -287,8 +288,8 @@
                                         <button type="button" class="btn btn-secondary"
                                         data-dismiss="modal">Close</button>
                                         <button type="button" class="btn bg-primary text-white"
-                                        id="editUser" role="button"
-                                        data-name = "${step}">Edit</button>
+                                        onclick="RestEdit()" role="button"
+                                        id = "${step}">Edit</button>
                                     </div>
             </div>
         </div>
@@ -453,7 +454,7 @@
                 }
             });
         }
-        $("#submitNewUser").click(function () {
+        $('#submitNewUser').click(function (event) {
                 let JSONObject = {
                     'firstName': $('#formFirstName').val(),
                     'lastName': $('#formLastName').val(),
@@ -482,8 +483,11 @@
         })
 
         // let RestPutUser =
-        $("#editStartbtn").click(function () {
-            let step = $("#editUser").dataset[0].name;
+        // $('#editStartbtn').click(
+        let EditStart = function (event) {
+            let step = event.target().id
+            // let step = event.target.dataset[0].target;
+            // let step = ""+$("#editUser").dataset[0].target;
             $('#EditFirstName').val($("#" + step + "fn").innerText)
             $('#EditLastName').val($("#" + step + "ln").innerText)
             $('#Editdate').val($("#" + step + "da").innerText)
@@ -491,10 +495,15 @@
             $('#Editpassword').val($("#" + step + "pa").innerText)
             // 'roles': ""//$('#EditroleSelect').val($("#" + step + "ro")),
             console.log(step)
-        })
+        }
+        // })
 
-        $("#editUser").click(function (event) {
-            let step = $("#editUser").dataset[0].name;
+        // $('#editUser').click(
+
+        let RestEdit = function (event) {
+            // let step = event.target.dataset[0].target;
+            let step = event.target().id
+            // let step = ""+$("#editUser").dataset[0].target;
             let JSONObject = {
                 'firstName': $("#" + step + "fn").innerText,
                 'lastName': $("#" + step + "ln").innerText,
@@ -520,11 +529,14 @@
                 }
 
             })
-            event.preventDefault()
-        });
+        }
+            // event.preventDefault()
+        // });
 
-        $("#btnDelete").click(function (event) {
-            let step = $("#editUser").dataset[0].name;
+        $('#btnDelete').click(function (event) {
+            // let step = event.target.dataset[0].target;
+             // $("#editUser")
+            let step = event.target().id
             $.ajax("http://localhost:8080/admin/userlist/" + $("#" + step + "un").innerText, {
                 type: "DELETE",
                 dataType: 'json',
@@ -537,7 +549,7 @@
                     alert(jqXHR.status + ' ' + jqXHR.responseText);
                 }
             })
-            event.preventDefault()
+            // event.preventDefault()
         });
 
         RestGetList()
