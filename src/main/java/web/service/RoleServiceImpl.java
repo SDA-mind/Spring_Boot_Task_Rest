@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.dao.RoleDao;
 import web.model.Role;
+import web.model.User;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -32,5 +34,9 @@ public class RoleServiceImpl implements RoleService {
 
     public Role getById(Long id) {
         return roleDao.getById(id);
+    }
+
+    public void roleSet(User user) {
+        roleDao.roleSet(user);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.dao.UserDao;
+import web.model.Role;
 import web.model.User;
 
 import javax.persistence.EntityManager;
@@ -25,7 +26,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void add(User user) {
-        user.setRoles(Collections.singleton(roleServiceImpl.getById(2L)));
         userDao.add(user);
     }
 

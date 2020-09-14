@@ -19,18 +19,17 @@ public class AdminController {
 
     @GetMapping(value = "/admin/userlist")
     public List<User> getList() {
-        List<User> userList = userServiceImpl.allUsers();
-        return userList;
+        return userServiceImpl.allUsers();
     }
 
     @GetMapping(value = "/user/{name}")
     public User getUser(@PathVariable("name") String name) {
-        User user = userServiceImpl.getByName(name);
-        return user;
+        return userServiceImpl.getByName(name);
     }
 
     @PostMapping(value = "/admin/userlist")
     public User add(@RequestBody User user) {
+        System.out.println(user);
         userServiceImpl.add(user);
         return user;
     }

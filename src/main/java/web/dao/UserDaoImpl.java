@@ -1,6 +1,7 @@
 package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import web.model.User;
 
@@ -10,6 +11,11 @@ import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+    @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -27,6 +33,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void add(User user) {
+        roleDao.roleSet(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         entityManager.persist(user);
     }
 
@@ -37,6 +45,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void edit(User user,String id) {
+        roleDao.roleSet(user);
+        entityManager.merge(user);
         entityManager.createNativeQuery("update users set first_name= :firstname, last_name= :lastname," +
                 "date= :date, name= :name, password= :pass where name= :id")
                 .setParameter("id",id)
@@ -46,6 +56,7 @@ public class UserDaoImpl implements UserDao {
                 .setParameter("name",user.getUsername())
                 .setParameter("pass",user.getPassword())
                 .executeUpdate();
+
     }
 
     @Override

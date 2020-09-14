@@ -72,6 +72,7 @@
                                             </tr>
                                             </thead>
                                             <tbody id="rows">
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -132,10 +133,13 @@
                                                         <b>Role</b>
                                                     </label>
                                                     <select multiple class="form-control" id="roleSelect">
-                                                        <option>ADMIN</option>
-                                                        <option>USER</option>
-                                                        <option>ANNON</option>
+                                                        <option id="ADMIN">ADMIN</option>
+                                                        <option id="USER">USER</option>
+                                                        <option id="ANNON">ANNON</option>
                                                     </select>
+                                                    <input type="hidden"
+                                                           name="rolesNew"
+                                                           id="rolesNew">
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     <input type="button" class="btn btn-success" id="submitNewUser" value="Add new user">
@@ -275,9 +279,9 @@
                                                     </label>
                                                     <select multiple class="form-control"
                                                             id="EditRoleSelect">
-                                                        <option>ADMIN</option>
-                                                        <option>USER</option>
-                                                        <option>ANNON</option>
+                                                        <option id="Edit_ADMIN">ADMIN</option>
+                                                        <option id="Edit_USER">USER</option>
+                                                        <option id="Edit_ANNON">ANNON</option>
                                                     </select>
                                                 </div>
                                             </form>
@@ -372,9 +376,9 @@ onclick="delPage(${step})">delete</button>
                                                             </label>
                                                             <select multiple class="form-control"
                                                                     id="DelRoleSelect">
-                                                                <option>ADMIN</option>
-                                                                <option>USER</option>
-                                                                <option>ANNON</option>
+                                                                <option >ADMIN</option>
+                                                                <option >USER</option>
+                                                                <option >ANNON</option>
                                                             </select>
                                                         </div>
                                                     </fieldset>
@@ -408,6 +412,7 @@ onclick="delPage(${step})">delete</button>
                 dataType: 'json',
                 async: true,
                 success: function (data) {
+                    console.log(data)
 
                     let auth = "";
                     for (let pop = 0; pop < data["authorities"].length; pop++) {
@@ -430,7 +435,11 @@ onclick="delPage(${step})">delete</button>
                 }
             });
         }
+
         $('#submitNewUser').click(function () {
+
+            let option = $('#roleSelect option:selected').val()
+            console.log(option)
             function redirect(){window.location = 'http://localhost:8080/admin';}
             redirect()
             RestGetList()
@@ -440,7 +449,7 @@ onclick="delPage(${step})">delete</button>
                     'date': $('#date').val(),
                     'name': $('#name').val(),
                     'password':  $('#password').val(),
-                    // 'roles': ""//$('#roleSelect').val(),
+                    'roles': [{"role":option},]
                 };
 
                 $.ajax({
@@ -486,6 +495,8 @@ onclick="delPage(${step})">delete</button>
     }
 
         function RESTEdit () {
+            let option = $('#EditRoleSelect option:selected').val()
+            console.log(option)
             RestGetList();
             console.log(stepid)
             let JSONObject = {
@@ -494,7 +505,7 @@ onclick="delPage(${step})">delete</button>
                 'date': $('#Editdate').val(),
                 'name': $('#Editname').val(),
                 'password': $('#Editpassword').val(),
-                // 'roles': $("#" + stepid + "ro").text(),
+                'roles': [{"role":option},]
             }
             $.ajax("http://localhost:8080/admin/userlist/" + JSONObject.name, {
                 type: "PUT",
@@ -529,7 +540,6 @@ onclick="delPage(${step})">delete</button>
                     alert(jqXHR.status + ' ' + jqXHR.responseText);
                 }
             })
-            RestGetList()
         }
 
         RestGetList()
