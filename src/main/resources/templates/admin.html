@@ -69,7 +69,6 @@
                                                 <th>Role</th>
                                                 <th>Edit</th>
                                                 <th>Delete</th>
-                                                <th>Add roles</th>
                                             </tr>
                                             </thead>
                                             <tbody id="rows">
@@ -181,6 +180,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    let stepid;
         let RestGetList = function () {
             $.ajax({
                 type: "GET",
@@ -203,7 +203,8 @@
 <td id="${step}da">${data[step].date}</td>
 <td id="${step}ro">${auth}</td>
 <td>
-    <button type="button" class="btn btn-info" role="button" data-toggle="modal" data-target="#modal" onclick="EditStart()">edit</button>
+    <button type="button" class="btn btn-info" role="button" data-toggle="modal" data-target="#modal" id="editStartbtn"
+     data-edit="${step}" onclick="editPage(${step})">edit</button>
     <div class="modal fade" id="modal" tabIndex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -247,7 +248,6 @@
                                                            id="Editdate"
                                                            placeholder="Enter date">
                                                 </div>
-                                                <fieldset disabled>
                                                     <div class="form-group">
                                                         <label for="name"
                                                                class="d-flex align-items-center justify-content-center">
@@ -258,7 +258,6 @@
                                                                id="Editname"
                                                                placeholder="Enter name">
                                                     </div>
-                                                </fieldset>
                                                 <div class="form-group">
                                                     <label for="password"
                                                            class="d-flex align-items-center justify-content-center">
@@ -275,7 +274,7 @@
                                                         <b>Role</b>
                                                     </label>
                                                     <select multiple class="form-control"
-                                                            id="EditroleSelect">
+                                                            id="EditRoleSelect">
                                                         <option>ADMIN</option>
                                                         <option>USER</option>
                                                         <option>ANNON</option>
@@ -288,15 +287,16 @@
                                         <button type="button" class="btn btn-secondary"
                                         data-dismiss="modal">Close</button>
                                         <button type="button" class="btn bg-primary text-white"
-                                        onclick="RestEdit()" role="button"
-                                        id = "${step}">Edit</button>
+                                         role="button" onclick="RESTEdit()" data-dismiss="modal"
+                                         >Edit</button>
                                     </div>
             </div>
         </div>
     </div>
 </td>
 <td>
-<a class="btn btn-danger" role="button" data-toggle="modal" href="#modalDelete">delete</a>
+<button type="button" class="btn btn-danger" role="button" data-toggle="modal" data-target="#modalDelete" data-delete="${step}"
+onclick="delPage(${step})">delete</button>
 <div class="modal fade" id="modalDelete" tabIndex="-1" role="dialog" aria-labelledby="modalLabel"
                                  aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -318,7 +318,7 @@
                                                             </label>
                                                             <input type="text" class="form-control"
                                                                    name="firstName"
-                                                                   id="DelformFirstName"
+                                                                   id="DelfirstName"
                                                                    placeholder="Enter First name">
                                                         </div>
                                                         <div class="form-group">
@@ -371,7 +371,7 @@
                                                                 <b>Role</b>
                                                             </label>
                                                             <select multiple class="form-control"
-                                                                    id="DelroleSelect">
+                                                                    id="DelRoleSelect">
                                                                 <option>ADMIN</option>
                                                                 <option>USER</option>
                                                                 <option>ANNON</option>
@@ -383,40 +383,16 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" role="button" id="btnDelete">Delete</button>
+                                            <button type="button" class="btn btn-primary" role="button" id="btnDelete"
+                                            onclick="RESTDelete()" data-dismiss="modal">Delete</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 </td>
-                        <td>
-                            <dl>
-                                <dt>
-                                    <div class="btn-group" role="group"
-                                         aria-label="Basic example">
-                                        <a class="btn btn-info" role="button"
-                                           href="/admin/editRoleAd/"
-                                           th:href="#">add_admin</a>
-                                        <a class="btn btn-info" role="button"
-                                           href="/admin/editRoleAn/"
-                                           th:href="#">add_annon</a>
-                                    </div>
-                                </dt>
-                                <dt>
-                                    <div class="btn-group" role="group"
-                                         aria-label="Basic example">
-                                        <a class="btn btn-danger" role="button"
-                                           href="/admin/deleteRoleAd/"
-                                           th:href="#">delete_admin</a>
-                                        <a class="btn btn-danger" role="button"
-                                           href="/admin/deleteRoleAn/"
-                                           th:href="#">delete_annon</a>
-                                    </div>
-                                </dt>
-                            </dl>
-                        </td>
             </tr>
             `
+
                     }
 
                 },
@@ -454,7 +430,10 @@
                 }
             });
         }
-        $('#submitNewUser').click(function (event) {
+        $('#submitNewUser').click(function () {
+            function redirect(){window.location = 'http://localhost:8080/admin';}
+            redirect()
+            RestGetList()
                 let JSONObject = {
                     'firstName': $('#formFirstName').val(),
                     'lastName': $('#formLastName').val(),
@@ -481,38 +460,42 @@
                     }
                 });
         })
+    function editPage(step) {
 
-        // let RestPutUser =
-        // $('#editStartbtn').click(
-        let EditStart = function (event) {
-            let step = event.target().id
-            // let step = event.target.dataset[0].target;
-            // let step = ""+$("#editUser").dataset[0].target;
-            $('#EditFirstName').val($("#" + step + "fn").innerText)
-            $('#EditLastName').val($("#" + step + "ln").innerText)
-            $('#Editdate').val($("#" + step + "da").innerText)
-            $('#Editname').val($("#" + step + "un").innerText)
-            $('#Editpassword').val($("#" + step + "pa").innerText)
-            // 'roles': ""//$('#EditroleSelect').val($("#" + step + "ro")),
-            console.log(step)
-        }
-        // })
+        console.log($("#" + step + "fn").text())
 
-        // $('#editUser').click(
+        $('#EditFirstName').val($("#" + step + "fn").text())
+        $('#EditLastName').val($("#" + step + "ln").text())
+        $('#Editdate').val($("#" + step + "da").text())
+        $('#Editname').val($("#" + step + "un").text())
+        $('#Editpassword').val($("#" + step + "pa").text())
+        // $('#EditRoleSelect').val($("#" + step + "ro").text())
+        console.log(step)
+        stepid = step
+    }
 
-        let RestEdit = function (event) {
-            // let step = event.target.dataset[0].target;
-            let step = event.target().id
-            // let step = ""+$("#editUser").dataset[0].target;
+    function delPage(step) {
+        $('#DelfirstName').val($("#" + step + "fn").text())
+        $('#DellastName').val($("#" + step + "ln").text())
+        $('#Deldate').val($("#" + step + "da").text())
+        $('#Delname').val($("#" + step + "un").text())
+        $('#Delpassword').val($("#" + step + "pa").text())
+        // $('#DelRoleSelect').val($("#" + step + "ro").text())
+        console.log(step)
+        stepid = step
+    }
+
+        function RESTEdit () {
+            RestGetList();
+            console.log(stepid)
             let JSONObject = {
-                'firstName': $("#" + step + "fn").innerText,
-                'lastName': $("#" + step + "ln").innerText,
-                'date': $("#" + step + "da").innerText,
-                'name': $("#" + step + "un").innerText,
-                'password': $("#" + step + "pa").innerText,
-                // 'roles': ""//$('#EditroleSelect').val($("#" + step + "ro")),
+                'firstName': $('#EditFirstName').val(),
+                'lastName': $('#EditLastName').val(),
+                'date': $('#Editdate').val(),
+                'name': $('#Editname').val(),
+                'password': $('#Editpassword').val(),
+                // 'roles': $("#" + stepid + "ro").text(),
             }
-            console.log(step)
             $.ajax("http://localhost:8080/admin/userlist/" + JSONObject.name, {
                 type: "PUT",
                 cache: false,
@@ -521,36 +504,33 @@
                 dataType: 'json',
                 processData: false,
                 async: true,
-                success: function (result) {
+                success: function () {
                     console.log("done put")
                 },
                 error: function (jqXHR) {
                     alert(jqXHR.status + ' ' + jqXHR.responseText)
                 }
-
             })
+            RestGetList()
         }
-            // event.preventDefault()
-        // });
 
-        $('#btnDelete').click(function (event) {
-            // let step = event.target.dataset[0].target;
-             // $("#editUser")
-            let step = event.target().id
-            $.ajax("http://localhost:8080/admin/userlist/" + $("#" + step + "un").innerText, {
+        function RESTDelete () {
+            RestGetList();
+            console.log(stepid)
+            $.ajax("http://localhost:8080/admin/userlist/" + $("#" + stepid + "un").text(), {
                 type: "DELETE",
                 dataType: 'json',
                 processData: false,
                 async: true,
-                success: function (result) {
+                success: function () {
                     console.log("deleted")
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR) {
                     alert(jqXHR.status + ' ' + jqXHR.responseText);
                 }
             })
-            // event.preventDefault()
-        });
+            RestGetList()
+        }
 
         RestGetList()
         RestGetUser()

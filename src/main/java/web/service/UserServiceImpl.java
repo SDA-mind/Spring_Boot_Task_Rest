@@ -14,21 +14,19 @@ import java.util.List;
 @Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
-    private EntityManager entityManager;
-    @Autowired
     private UserDao userDao;
     @Autowired
     private RoleServiceImpl roleServiceImpl;
 
     @Override
     public List<User> allUsers() {
-        return userDao.findAll();
+        return userDao.allUsers();
     }
 
     @Override
     public void add(User user) {
         user.setRoles(Collections.singleton(roleServiceImpl.getById(2L)));
-        userDao.save(user);
+        userDao.add(user);
     }
 
     @Override
@@ -37,21 +35,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void edit(User user,String id) {
-        entityManager.createNativeQuery("update users set first_name= :firstname, last_name= :lastname," +
-                "date= :date, name= :name, password= :pass where name= :id")
-                .setParameter("id",id)
-                .setParameter("firstname",user.getFirstName())
-                .setParameter("lastname",user.getLastName())
-                .setParameter("date",user.getDate())
-                .setParameter("name",user.getUsername())
-                .setParameter("pass",user.getPassword())
-                .executeUpdate();
+    public void edit(User user,String editName) {
+        userDao.edit(user,editName);
     }
 
     @Override
     public User getByName(String name) {
-        return userDao.findById(name).get();
+        return userDao.getByName(name);
     }
 
     @Override

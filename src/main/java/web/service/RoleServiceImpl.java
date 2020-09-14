@@ -15,11 +15,11 @@ public class RoleServiceImpl implements RoleService {
     private RoleDao roleDao;
 
     public List<Role> allRoles() {
-        return roleDao.findAll();
+        return roleDao.allRoles();
     }
 
     public void add(Role role) {
-        roleDao.save(role);
+        roleDao.add(role);
     }
 
     public void delete(Role role) {
@@ -27,10 +27,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     public void edit(Role role) {
-        roleDao.save(role);
+        roleDao.edit(role);
     }
 
     public Role getById(Long id) {
-        return roleDao.findById(id).get();
+        return roleDao.getById(id);
     }
 }

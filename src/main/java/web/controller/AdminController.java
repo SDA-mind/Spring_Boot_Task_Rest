@@ -36,9 +36,9 @@ public class AdminController {
     }
 
     @PutMapping(value = "/admin/userlist/{name}")
-    public User edit(@PathVariable("name") String name, @RequestBody User user) {
-        userServiceImpl.edit(user, name);
-        return user;
+    public User edit(@PathVariable("name") String editName, @RequestBody User user) {
+       userServiceImpl.edit(user, editName);
+       return user;
     }
 
     @DeleteMapping(value = "/admin/userlist/{name}")
@@ -47,29 +47,5 @@ public class AdminController {
         userServiceImpl.delete(user);
         return user;
     }
-
-//    @GetMapping(value = "/admin/editRoleAd/{name}")
-//    public String setRoleAdmin(@PathVariable("name") String name) {
-//        userService.addRole(name, 1L);
-//        return "redirect:/admin/userlist";
-//    }
-//
-//    @GetMapping(value = "/admin/editRoleAn/{name}")
-//    public String setRoleAnnon(@PathVariable("name") String name) {
-//        userService.addRole(name, 3L);
-//        return "redirect:/admin/userlist";
-//    }
-//
-//    @GetMapping(value = "/admin/deleteRoleAd/{name}")
-//    public String deleteRoleAdmin(@PathVariable("name") String name) {
-//        userService.deleteRole(name, 1L);
-//        return "redirect:/admin/userlist";
-//    }
-//
-//    @GetMapping(value = "/admin/deleteRoleAn/{name}")
-//    public String deleteRoleAnnon(@PathVariable("name") String name) {
-//        userService.deleteRole(name, 3L);
-//        return "redirect:/admin/userlist";
-//    }
 
 }
