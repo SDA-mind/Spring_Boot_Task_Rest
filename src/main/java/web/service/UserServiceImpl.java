@@ -43,18 +43,4 @@ public class UserServiceImpl implements UserService {
     public User getByName(String name) {
         return userDao.getByName(name);
     }
-
-    @Override
-    public void addRole(String name, Long id) {
-        User user = getByName(name);
-        user.getRoles().add(roleServiceImpl.getById(id));
-        edit(user,user.getUsername());
-    }
-
-    @Override
-    public void deleteRole(String name, Long id) {
-        User user = getByName(name);
-        user.getRoles().remove(roleServiceImpl.getById(id));
-        edit(user,user.getUsername());
-    }
 }

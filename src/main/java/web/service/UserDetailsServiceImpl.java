@@ -1,5 +1,6 @@
 package web.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,7 +11,7 @@ import web.dao.UserDao;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDao userDao;
 
-    public UserDetailsServiceImpl(UserDao UserDao) {
+    public UserDetailsServiceImpl(@Qualifier("userDaoImpl") UserDao UserDao) {
         this.userDao = UserDao;
     }
 

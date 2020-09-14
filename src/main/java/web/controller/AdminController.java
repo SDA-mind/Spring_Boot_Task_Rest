@@ -14,8 +14,6 @@ import java.util.List;
 public class AdminController {
     @Autowired
     private UserService userServiceImpl;
-    @Autowired
-    private RoleService roleServiceImpl;
 
     @GetMapping(value = "/admin/userlist")
     public List<User> getList() {
@@ -29,7 +27,6 @@ public class AdminController {
 
     @PostMapping(value = "/admin/userlist")
     public User add(@RequestBody User user) {
-        System.out.println(user);
         userServiceImpl.add(user);
         return user;
     }

@@ -16,9 +16,9 @@
 <div>
     <header class="navbar navbar-dark bg-dark">
         <div class="text-block" style="margin-left: 20px">
-            <span class="navbar-text text-white" ><b id="usernamelabel" sec:authentication="name"  ></b></span>
+            <span class="navbar-text text-white" ><b id="userNameLabel" sec:authentication="name"></b></span>
             <span class="navbar-text text-white">with roles:</span>
-            <span class="navbar-text text-white" id="adminRoles"></span>
+            <span class="navbar-text text-white"><div id="adminRoles"></div></span>
 <!--                  sec:authentication="principal.authorities"-->
         </div>
         <a href="/logout" class="btn btn-dark text-muted" role="button">Logout</a>
@@ -56,7 +56,7 @@
                                         <h5>All Users</h5>
                                     </div>
                                     <div class="panel-body bg-white" style="padding: 20px">
-                                        <table class="table table-striped table-hover">
+                                        <table class="table table-striped table-hover" id="UserTable">
                                             <thead>
                                             <tr>
                                                 <!--                                    <th>ID</th>-->
@@ -185,21 +185,27 @@
 </div>
 <script type="text/javascript">
     let stepid;
-        let RestGetList = function () {
-            $.ajax({
-                type: "GET",
-                url: "http://localhost:8080/admin/userlist",
-                dataType: 'json',
-                async: true,
-                success: function (data) {
-                    for (let step = 0; step < data.length; step++) {
-                        let auth = "";
-                        for (let pop = 0; pop < data[step]["authorities"].length; pop++) {
-                            auth += data[step]["authorities"][pop].authority + ",";
-                        }
+    function ReInstall () {
+        $('#rows').empty()
+        RestGetList()
+    }
+    let RestGetList = function () {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/admin/userlist",
+            dataType: 'json',
+            async: true,
+            success: function (data) {
+                let accName = $('#userNameLabel').text()
 
-                        document.getElementById("rows").innerHTML +=
-                            `<tr>
+                for (let step = 0; step < data.length; step++) {
+                    let auth = "";
+                    for (let pop = 0; pop < data[step]["authorities"].length; pop++) {
+                        auth += data[step]["authorities"][pop].authority + ",";
+                    }
+
+                    document.getElementById("rows").innerHTML +=
+                        `<tr>
 <td id="${step}fn" >${data[step].firstName}</td>
 <td id="${step}ln">${data[step].lastName}</td>
 <td id="${step}un">${data[step].username}</td>
@@ -291,7 +297,7 @@
                                         <button type="button" class="btn btn-secondary"
                                         data-dismiss="modal">Close</button>
                                         <button type="button" class="btn bg-primary text-white"
-                                         role="button" onclick="RESTEdit()" data-dismiss="modal"
+                                         role="button" onclick="RESTEdit()"
                                          >Edit</button>
                                     </div>
             </div>
@@ -388,7 +394,7 @@ onclick="delPage(${step})">delete</button>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             <button type="button" class="btn btn-primary" role="button" id="btnDelete"
-                                            onclick="RESTDelete()" data-dismiss="modal">Delete</button>
+                                            onclick="RESTDelete()" >Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -396,31 +402,27 @@ onclick="delPage(${step})">delete</button>
 </td>
             </tr>
             `
-
                     }
-
                 },
                 error: function (jqXHR) {
                     alert(jqXHR.status + ' ' + jqXHR.responseText);
                 }
             });
         }
-        let RestGetUser = function () {
-            $.ajax({
-                type: "GET",
-                url: "http://localhost:8080/user/" + document.getElementById("usernamelabel").innerText,
-                dataType: 'json',
-                async: true,
-                success: function (data) {
-                    console.log(data)
+    let RestGetUser = function () {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/user/" + document.getElementById("userNameLabel").innerText,
+            dataType: 'json',
+            async: true,
+            success: function (data) {
 
-                    let auth = "";
-                    for (let pop = 0; pop < data["authorities"].length; pop++) {
-                        auth += data["authorities"][pop].authority;
-                    }
-
-                    document.getElementById("userRows").innerHTML +=
-                        `<tr>
+                let auth = "";
+                for (let pop = 0; pop < data["authorities"].length; pop++) {
+                    auth += data["authorities"][pop].authority;
+                }
+                document.getElementById("userRows").innerHTML +=
+                    `<tr>
 <td >${data.firstName}</td>
 <td >${data.lastName}</td>
 <td >${data.username}</td>
@@ -429,57 +431,56 @@ onclick="delPage(${step})">delete</button>
 <td >${auth}</td>
             </tr>`
 
-                },
-                error: function (jqXHR) {
-                    alert(jqXHR.status + ' ' + jqXHR.responseText);
-                }
-            });
+            },
+            error: function (jqXHR) {
+                alert(jqXHR.status + ' ' + jqXHR.responseText);
+            }
+        });
+    }
+
+    $('#submitNewUser').click(function () {
+
+        let option = $('#roleSelect option:selected').val()
+
+        function redirect() {
+            window.location = 'http://localhost:8080/admin';
         }
 
-        $('#submitNewUser').click(function () {
+        let JSONObject = {
+            'firstName': $('#formFirstName').val(),
+            'lastName': $('#formLastName').val(),
+            'date': $('#date').val(),
+            'name': $('#name').val(),
+            'password': $('#password').val(),
+            'roles': [{"role": option},]
+        };
 
-            let option = $('#roleSelect option:selected').val()
-            console.log(option)
-            function redirect(){window.location = 'http://localhost:8080/admin';}
-            redirect()
-            RestGetList()
-                let JSONObject = {
-                    'firstName': $('#formFirstName').val(),
-                    'lastName': $('#formLastName').val(),
-                    'date': $('#date').val(),
-                    'name': $('#name').val(),
-                    'password':  $('#password').val(),
-                    'roles': [{"role":option},]
-                };
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "http://localhost:8080/admin/userlist",
+            data: JSON.stringify(JSONObject),
+            dataType: 'json',
+            cache: false,
+            processData: false,
+            async: true,
+            success: function (result) {
+                ReInstall()
+                redirect()
+            },
+            error: function (jqXHR) {
+                alert(jqXHR.status + ' ' + jqXHR.responseText)
+            }
+        });
+    })
 
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    url: "http://localhost:8080/admin/userlist",
-                    data: JSON.stringify(JSONObject),
-                    dataType: 'json',
-                    cache: false,
-                    processData: false,
-                    async: true,
-                    success: function (result) {
-                        console.log("done add")
-                    },
-                    error: function (jqXHR) {
-                        alert(jqXHR.status + ' ' + jqXHR.responseText)
-                    }
-                });
-        })
     function editPage(step) {
-
-        console.log($("#" + step + "fn").text())
 
         $('#EditFirstName').val($("#" + step + "fn").text())
         $('#EditLastName').val($("#" + step + "ln").text())
         $('#Editdate').val($("#" + step + "da").text())
         $('#Editname').val($("#" + step + "un").text())
         $('#Editpassword').val($("#" + step + "pa").text())
-        // $('#EditRoleSelect').val($("#" + step + "ro").text())
-        console.log(step)
         stepid = step
     }
 
@@ -489,61 +490,56 @@ onclick="delPage(${step})">delete</button>
         $('#Deldate').val($("#" + step + "da").text())
         $('#Delname').val($("#" + step + "un").text())
         $('#Delpassword').val($("#" + step + "pa").text())
-        // $('#DelRoleSelect').val($("#" + step + "ro").text())
-        console.log(step)
         stepid = step
     }
 
-        function RESTEdit () {
-            let option = $('#EditRoleSelect option:selected').val()
-            console.log(option)
-            RestGetList();
-            console.log(stepid)
-            let JSONObject = {
-                'firstName': $('#EditFirstName').val(),
-                'lastName': $('#EditLastName').val(),
-                'date': $('#Editdate').val(),
-                'name': $('#Editname').val(),
-                'password': $('#Editpassword').val(),
-                'roles': [{"role":option},]
+    function RESTEdit() {
+        $(".modal-backdrop.show").hide();
+        let option = $('#EditRoleSelect option:selected').val()
+
+        let JSONObject = {
+            'firstName': $('#EditFirstName').val(),
+            'lastName': $('#EditLastName').val(),
+            'date': $('#Editdate').val(),
+            'name': $('#Editname').val(),
+            'password': $('#Editpassword').val(),
+            'roles': [{"role": option},]
+        }
+        $.ajax("http://localhost:8080/admin/userlist/" + JSONObject.name, {
+            type: "PUT",
+            cache: false,
+            data: JSON.stringify(JSONObject),
+            contentType: "application/json",
+            dataType: 'json',
+            processData: false,
+            async: true,
+            success: function () {
+                ReInstall()
+            },
+            error: function (jqXHR) {
+                alert(jqXHR.status + ' ' + jqXHR.responseText)
             }
-            $.ajax("http://localhost:8080/admin/userlist/" + JSONObject.name, {
-                type: "PUT",
-                cache: false,
-                data: JSON.stringify(JSONObject),
-                contentType: "application/json",
-                dataType: 'json',
-                processData: false,
-                async: true,
-                success: function () {
-                    console.log("done put")
-                },
-                error: function (jqXHR) {
-                    alert(jqXHR.status + ' ' + jqXHR.responseText)
-                }
-            })
-            RestGetList()
-        }
+        })
+    }
 
-        function RESTDelete () {
-            RestGetList();
-            console.log(stepid)
-            $.ajax("http://localhost:8080/admin/userlist/" + $("#" + stepid + "un").text(), {
-                type: "DELETE",
-                dataType: 'json',
-                processData: false,
-                async: true,
-                success: function () {
-                    console.log("deleted")
-                },
-                error: function (jqXHR) {
-                    alert(jqXHR.status + ' ' + jqXHR.responseText);
-                }
-            })
-        }
+    function RESTDelete() {
+        $(".modal-backdrop.show").hide();
+        $.ajax("http://localhost:8080/admin/userlist/" + $("#" + stepid + "un").text(), {
+            type: "DELETE",
+            dataType: 'json',
+            processData: false,
+            async: true,
+            success: function () {
+                ReInstall()
+            },
+            error: function (jqXHR) {
+                alert(jqXHR.status + ' ' + jqXHR.responseText);
+            }
+        })
+    }
 
-        RestGetList()
-        RestGetUser()
+    ReInstall()
+    RestGetUser()
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"

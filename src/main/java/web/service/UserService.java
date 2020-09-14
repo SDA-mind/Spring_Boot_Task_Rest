@@ -16,8 +16,4 @@ public interface UserService {
     void edit(User user,String id);
 
     User getByName(String name);
-
-    void addRole(String name, Long id);
-
-    void deleteRole(String name, Long id);
 }
