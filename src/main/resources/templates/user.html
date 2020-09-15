@@ -18,7 +18,10 @@
         <div class="text-block" style="margin-left: 20px">
             <span class="navbar-text text-white"><b id="usernamelabel" sec:authentication="name"></b></span>
             <span class="navbar-text text-white">with roles:</span>
-            <span class="navbar-text text-white" id="userRoles"></span>
+            <span class="navbar-text text-white" id="userRoles">
+                <div id="Roles" sec:authentication="principal.authorities">
+                </div>
+            </span>
         </div>
         <a href="/logout" class="btn btn-dark text-muted" role="button">Logout</a>
     </header>
