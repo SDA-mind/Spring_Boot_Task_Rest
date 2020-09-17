@@ -8,7 +8,9 @@ import web.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
@@ -43,24 +45,25 @@ public class RoleDaoImpl implements RoleDao {
     }
     @Override
     public void roleSet(User user) {
-        for (Role role :user.getRoles()) {
-            switch (role.getRole()){
-                case "ADMIN" : {
-                    user.getRoles().clear();
-                    user.setRoles(Collections.singleton(getById(1L)));
+        Set<Role> tempSet = new HashSet<Role>();
+        System.out.println(user.getRoles());
+        for (Role role : user.getRoles()) {
+            switch (role.getRole()) {
+                case "ROLE_ADMIN": {
+                    tempSet.add(getById(1L));
                     break;
                 }
-                case "USER" : {
-                    user.getRoles().clear();
-                    user.setRoles(Collections.singleton(getById(2L)));
+                case "ROLE_USER": {
+                    tempSet.add(getById(2L));
                     break;
                 }
-                case "ANNON" : {
-                    user.getRoles().clear();
-                    user.setRoles(Collections.singleton(getById(3L)));
+                case "ROLE_ANNON": {
+                    tempSet.add(getById(3L));
                     break;
                 }
             }
         }
+        user.setRoles(tempSet);
+        entityManager.merge(user);
     }
 }

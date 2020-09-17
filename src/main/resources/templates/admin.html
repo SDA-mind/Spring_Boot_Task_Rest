@@ -134,10 +134,10 @@
                                                            class="d-flex align-items-center justify-content-center">
                                                         <b>Role</b>
                                                     </label>
-                                                    <select multiple class="form-control" id="roleSelect">
-                                                        <option id="ADMIN">ADMIN</option>
-                                                        <option id="USER">USER</option>
-                                                        <option id="ANNON">ANNON</option>
+                                                    <select multiple="multiple" name="roles[]" size="3" class="form-control" id="roleSelect">
+                                                        <option id="ADMIN" value="ROLE_ADMIN">ADMIN</option>
+                                                        <option id="USER" value="ROLE_USER">USER</option>
+                                                        <option id="ANNON" value="ROLE_ANNON">ANNON</option>
                                                     </select>
                                                     <input type="hidden"
                                                            name="rolesNew"
@@ -194,7 +194,7 @@
     let RestGetList = function () {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/admin/userlist",
+            url: "http://me.org:8080/admin/userlist",
             dataType: 'json',
             async: true,
             success: function (data) {
@@ -207,122 +207,33 @@
                     }
 
                     document.getElementById("rows").innerHTML +=
-                        `<tr>
-<td id="${step}fn" >${data[step].firstName}</td>
-<td id="${step}ln">${data[step].lastName}</td>
-<td id="${step}un">${data[step].username}</td>
-<td id="${step}pa">${data[step].password}</td>
-<td id="${step}da">${data[step].date}</td>
-<td id="${step}ro">${auth}</td>
-<td>
-    <button type="button" class="btn btn-info" role="button" data-toggle="modal" data-target="#modal" id="editStartbtn"
-     data-edit="${step}" onclick="editPage(${step})">edit</button>
-    <div class="modal fade" id="modal" tabIndex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ModalLabel">Edit User</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex align-items-center flex-column justify-content-center h-100">
-                        <form id="EditForm" action="">
-                            <div class="form-group">
-                                <label for="formFirstName"
-                                    class="d-flex align-items-center justify-content-center">
-                                    <b>First Name</b>
-                                </label>
-                                <input type="text" class="form-control"
-                                     name="firstName"
-                                     id="EditFirstName"
-                                     placeholder="Enter First name"
-                                     value="">
-                            </div>
-                            <div class="form-group">
-                                                    <label for="lastName"
-                                                           class="d-flex align-items-center justify-content-center">
-                                                        <b>Last name</b>
-                                                    </label>
-                                                    <input type="text" class="form-control"
-                                                           name="lastName"
-                                                           id="EditLastName"
-                                                           placeholder="Enter Last name">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="date"
-                                                           class="d-flex align-items-center justify-content-center">
-                                                        <b>Date</b>
-                                                    </label>
-                                                    <input type="text" class="form-control"
-                                                           name="date"
-                                                           id="Editdate"
-                                                           placeholder="Enter date">
-                                                </div>
-                                                    <div class="form-group">
-                                                        <label for="name"
-                                                               class="d-flex align-items-center justify-content-center">
-                                                            <b>Name</b>
-                                                        </label>
-                                                        <input type="text" class="form-control disabled"
-                                                               name="name"
-                                                               id="Editname"
-                                                               placeholder="Enter name">
-                                                    </div>
-                                                <div class="form-group">
-                                                    <label for="password"
-                                                           class="d-flex align-items-center justify-content-center">
-                                                        <b>Password</b>
-                                                    </label>
-                                                    <input type="text" class="form-control"
-                                                           name="password"
-                                                           id="Editpassword"
-                                                           placeholder="Enter password">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="roleSelect"
-                                                           class="d-flex align-items-center justify-content-center">
-                                                        <b>Role</b>
-                                                    </label>
-                                                    <select multiple class="form-control"
-                                                            id="EditRoleSelect">
-                                                        <option id="Edit_ADMIN">ADMIN</option>
-                                                        <option id="Edit_USER">USER</option>
-                                                        <option id="Edit_ANNON">ANNON</option>
-                                                    </select>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn bg-primary text-white"
-                                         role="button" onclick="RESTEdit()"
-                                         >Edit</button>
-                                    </div>
-            </div>
-        </div>
-    </div>
-</td>
-<td>
-<button type="button" class="btn btn-danger" role="button" data-toggle="modal" data-target="#modalDelete" data-delete="${step}"
-onclick="delPage(${step})">delete</button>
-<div class="modal fade" id="modalDelete" tabIndex="-1" role="dialog" aria-labelledby="modalLabel"
-                                 aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="ModalDelLabel">Delete User</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="d-flex align-items-center flex-column justify-content-center h-100">
-                                                <form action="/admin/user/">
-                                                    <fieldset disabled>
+                       `<tr>
+                            <td id="${step}fn">${data[step].firstName}</td>
+                            <td id="${step}ln">${data[step].lastName}</td>
+                            <td id="${step}un">${data[step].username}</td>
+                            <td id="${step}pa">${data[step].password}</td>
+                            <td id="${step}da">${data[step].date}</td>
+                            <td id="${step}ro">${auth}</td>
+                            <td>
+                                <button type="button" class="btn btn-info" role="button" data-toggle="modal"
+                                        data-target="#modal" id="editStartbtn"
+                                        data-edit="${step}" onclick="editPage(${step})">edit
+                                </button>
+                                <div class="modal fade" id="modal" tabIndex="-1" role="dialog"
+                                     aria-labelledby="modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="ModalLabel">Edit User</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div
+                                                    class="d-flex align-items-center flex-column justify-content-center h-100">
+                                                    <form id="EditForm" action="">
                                                         <div class="form-group">
                                                             <label for="formFirstName"
                                                                    class="d-flex align-items-center justify-content-center">
@@ -330,8 +241,9 @@ onclick="delPage(${step})">delete</button>
                                                             </label>
                                                             <input type="text" class="form-control"
                                                                    name="firstName"
-                                                                   id="DelfirstName"
-                                                                   placeholder="Enter First name">
+                                                                   id="EditFirstName"
+                                                                   placeholder="Enter First name"
+                                                                   value="">
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="lastName"
@@ -340,7 +252,7 @@ onclick="delPage(${step})">delete</button>
                                                             </label>
                                                             <input type="text" class="form-control"
                                                                    name="lastName"
-                                                                   id="DellastName"
+                                                                   id="EditLastName"
                                                                    placeholder="Enter Last name">
                                                         </div>
                                                         <div class="form-group">
@@ -350,23 +262,19 @@ onclick="delPage(${step})">delete</button>
                                                             </label>
                                                             <input type="text" class="form-control"
                                                                    name="date"
-                                                                   id="Deldate"
+                                                                   id="Editdate"
                                                                    placeholder="Enter date">
                                                         </div>
-
                                                         <div class="form-group">
                                                             <label for="name"
                                                                    class="d-flex align-items-center justify-content-center">
                                                                 <b>Name</b>
                                                             </label>
-                                                            <input type="text"
-                                                                   class="form-control disabled"
+                                                            <input type="text" class="form-control disabled"
                                                                    name="name"
-                                                                   id="Delname"
-                                                                   placeholder="Enter name"
-                                                                   value="admin">
+                                                                   id="Editname"
+                                                                   placeholder="Enter name">
                                                         </div>
-
                                                         <div class="form-group">
                                                             <label for="password"
                                                                    class="d-flex align-items-center justify-content-center">
@@ -374,7 +282,7 @@ onclick="delPage(${step})">delete</button>
                                                             </label>
                                                             <input type="text" class="form-control"
                                                                    name="password"
-                                                                   id="Delpassword"
+                                                                   id="Editpassword"
                                                                    placeholder="Enter password">
                                                         </div>
                                                         <div class="form-group">
@@ -382,29 +290,143 @@ onclick="delPage(${step})">delete</button>
                                                                    class="d-flex align-items-center justify-content-center">
                                                                 <b>Role</b>
                                                             </label>
-                                                            <select multiple class="form-control"
-                                                                    id="DelRoleSelect">
-                                                                <option >ADMIN</option>
-                                                                <option >USER</option>
-                                                                <option >ANNON</option>
-                                                            </select>
+                                                            <select multiple="multiple" name="EditRoles[]" size="3"
+                                                                        class="form-control" id="EditRoleSelect">
+                                                                    <option id="EditADMIN" value="ROLE_ADMIN">ADMIN
+                                                                    </option>
+                                                                    <option id="EditUSER" value="ROLE_USER">USER
+                                                                    </option>
+                                                                    <option id="EditANNON" value="ROLE_ANNON">ANNON
+                                                                    </option>
+                                                             </select>
                                                         </div>
-                                                    </fieldset>
-                                                </form>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" role="button" id="btnDelete"
-                                            onclick="RESTDelete()" >Delete</button>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close
+                                                </button>
+                                                <button type="button" class="btn bg-primary text-white"
+                                                        role="button" onclick="RESTEdit()"
+                                                >Edit
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-</td>
-            </tr>
-            `
-                    }
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" role="button" data-toggle="modal"
+                                        data-target="#modalDelete" data-delete="${step}"
+                                        onclick="delPage(${step})">delete
+                                </button>
+                                <div class="modal fade" id="modalDelete" tabIndex="-1" role="dialog"
+                                     aria-labelledby="modalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="ModalDelLabel">Delete User</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div
+                                                    class="d-flex align-items-center flex-column justify-content-center h-100">
+                                                    <form action="/admin/user/">
+                                                        <fieldset disabled>
+                                                            <div class="form-group">
+                                                                <label for="formFirstName"
+                                                                       class="d-flex align-items-center justify-content-center">
+                                                                    <b>First Name</b>
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                       name="firstName"
+                                                                       id="DelfirstName"
+                                                                       placeholder="Enter First name">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="lastName"
+                                                                       class="d-flex align-items-center justify-content-center">
+                                                                    <b>Last name</b>
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                       name="lastName"
+                                                                       id="DellastName"
+                                                                       placeholder="Enter Last name">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="date"
+                                                                       class="d-flex align-items-center justify-content-center">
+                                                                    <b>Date</b>
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                       name="date"
+                                                                       id="Deldate"
+                                                                       placeholder="Enter date">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="name"
+                                                                       class="d-flex align-items-center justify-content-center">
+                                                                    <b>Name</b>
+                                                                </label>
+                                                                <input type="text"
+                                                                       class="form-control disabled"
+                                                                       name="name"
+                                                                       id="Delname"
+                                                                       placeholder="Enter name"
+                                                                       value="admin">
+                                                            </div>
+
+                                                            <div class="form-group">
+                                                                <label for="password"
+                                                                       class="d-flex align-items-center justify-content-center">
+                                                                    <b>Password</b>
+                                                                </label>
+                                                                <input type="text" class="form-control"
+                                                                       name="password"
+                                                                       id="Delpassword"
+                                                                       placeholder="Enter password">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="roleSelect"
+                                                                       class="d-flex align-items-center justify-content-center">
+                                                                    <b>Role</b>
+                                                                </label>
+                                                                <select multiple="multiple" name="roles[]" size="3"
+                                                                        class="form-control" id="DelRoleSelect">
+                                                                    <option id="DelADMIN" value="ROLE_ADMIN">ADMIN
+                                                                    </option>
+                                                                    <option id="DelUSER" value="ROLE_USER">USER
+                                                                    </option>
+                                                                    <option id="DelANNON" value="ROLE_ANNON">ANNON
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </fieldset>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close
+                                                </button>
+                                                <button type="button" class="btn btn-primary" role="button"
+                                                        id="btnDelete"
+                                                        onclick="RESTDelete()">Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                `
+                }
                 },
                 error: function (jqXHR) {
                     alert(jqXHR.status + ' ' + jqXHR.responseText);
@@ -414,7 +436,7 @@ onclick="delPage(${step})">delete</button>
     let RestGetUser = function () {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/user/" + document.getElementById("userNameLabel").innerText,
+            url: "http://me.org:8080/user/" + document.getElementById("userNameLabel").innerText,
             dataType: 'json',
             async: true,
             success: function (data) {
@@ -442,10 +464,13 @@ onclick="delPage(${step})">delete</button>
 
     $('#submitNewUser').click(function () {
 
-        let option = $('#roleSelect option:selected').val()
-
+        let option = [];
+        for (let i = 0; i < $('#roleSelect').val().length; i++) {
+            option[i] = {"role":$('#roleSelect').val()[i]}
+            console.log(option[i])
+        }
         function redirect() {
-            window.location = 'http://localhost:8080/admin';
+            window.location = 'http://me.org:8080/admin';
         }
 
         let JSONObject = {
@@ -454,13 +479,13 @@ onclick="delPage(${step})">delete</button>
             'date': $('#date').val(),
             'name': $('#name').val(),
             'password': $('#password').val(),
-            'roles': [{"role": option},]
+            'roles': option
         };
 
         $.ajax({
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            url: "http://localhost:8080/admin/userlist",
+            url: "http://me.org:8080/admin/userlist",
             data: JSON.stringify(JSONObject),
             dataType: 'json',
             cache: false,
@@ -497,7 +522,10 @@ onclick="delPage(${step})">delete</button>
 
     function RESTEdit() {
         $(".modal-backdrop.show").hide();
-        let option = $('#EditRoleSelect option:selected').val()
+        let option = [];
+        for (let i = 0; i < $('#EditRoleSelect').val().length; i++) {
+            option[i] = {"role":$('#EditRoleSelect').val()[i]}
+        }
 
         let JSONObject = {
             'firstName': $('#EditFirstName').val(),
@@ -505,9 +533,9 @@ onclick="delPage(${step})">delete</button>
             'date': $('#Editdate').val(),
             'name': $('#Editname').val(),
             'password': $('#Editpassword').val(),
-            'roles': [{"role": option},]
+            'roles': option
         }
-        $.ajax("http://localhost:8080/admin/userlist/" + JSONObject.name, {
+        $.ajax("http://me.org:8080/admin/userlist/" + JSONObject.name, {
             type: "PUT",
             cache: false,
             data: JSON.stringify(JSONObject),
@@ -526,7 +554,7 @@ onclick="delPage(${step})">delete</button>
 
     function RESTDelete() {
         $(".modal-backdrop.show").hide();
-        $.ajax("http://localhost:8080/admin/userlist/" + $("#" + stepid + "un").text(), {
+        $.ajax("http://me.org:8080/admin/userlist/" + $("#" + stepid + "un").text(), {
             type: "DELETE",
             dataType: 'json',
             processData: false,

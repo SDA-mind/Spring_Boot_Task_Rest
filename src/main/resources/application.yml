@@ -1,0 +1,12 @@
+google:
+  client:
+    clientid: 101330429823-dn6qo0fp2up9acj07ldshb46gams1l8o.apps.googleusercontent.com
+    clientsecret: mz2IFxI8OdG60FH_EMoIDz6W
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    clientAuthenticationScheme: form
+    scope: openid,email,profile
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+server:
+  port: 8080
